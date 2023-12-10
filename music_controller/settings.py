@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions.backends.db',
     
     "api.apps.ApiConfig",
+    "spotify.apps.SpotifyConfig",
     "rest_framework",
     "frontend.apps.FrontendConfig",
     
