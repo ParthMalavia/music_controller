@@ -6,24 +6,27 @@ import { useSession } from './SessionContext'; // Import the useSession hook
 
 export default function HomePage(props) {
 
-    const {roomCode, setRoomCode} = props;
+    const { roomCode, setRoomCode } = props;
     const { session } = useSession();
     const navigate = useNavigate();
 
-    async function callTest() {
-        try {
-            session.get('test')
-            .then(response => console.log("RES", response))
-        } catch (err) {
-            console.log("callTest:", err);
-        }
-    }
+    // async function callTest() {
+    //     try {
+    //         session.get('api/test')
+    //         .then(response => console.log("RES", response))
+    //     } catch (err) {
+    //         console.log("callTest:", err);
+    //     }
+    // }
 
     useEffect(() => {
         async function fetchRoomCode() {
             try {
-                session.get("user-in-room")
-                .then(response => setRoomCode(response.data.code))
+                session.get("api/user-in-room")
+                    .then(response => {
+                        console.log("Setting Room code :: ", response.data.code)
+                        setRoomCode(response.data.code)
+                    })
             } catch (err) {
                 console.log("User in room:", err);
             }
@@ -32,7 +35,7 @@ export default function HomePage(props) {
         fetchRoomCode();
     }, [session, setRoomCode]);
 
-    console.log("!!roomCode", !!roomCode)
+    console.log("!!roomCode", !!roomCode, roomCode)
     useEffect(() => {
         if (!!roomCode) {
             console.log("Before Redirect")

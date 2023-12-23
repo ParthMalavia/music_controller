@@ -22,7 +22,7 @@ export default function RoomJoinPage() {
         //     })
         // };
         // fetch("http://localhost:8000/api/join-room", requestOptions)
-        session.post("join-room", {code: roomCode})
+        session.post("api/join-room", {code: roomCode})
             .then(response => {
                 if (response.status===200) {
                     navigate(`/room/${roomCode}`)

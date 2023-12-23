@@ -12,7 +12,7 @@ def get_user_token(session_id) -> SpotifyToken | None:
     return None
 
 def update_or_create_token(session_id, access_token, token_type, expires_in, refresh_token, scope):
-    token = get_user_token()
+    token = get_user_token(session_id)
     expires_at = timezone.now() + timedelta(expires_in)
 
     if token:
@@ -32,7 +32,8 @@ def update_or_create_token(session_id, access_token, token_type, expires_in, ref
         token.save()
 
 def is_spotify_authenticated(session_id):
-    token = get_user_token(session_id)    
+    token = get_user_token(session_id)   
+    print("is_spotify_authenticated >> token ::", token) 
     if token:
         expires_at = token.expires_at
         if expires_at <= timezone.now():
@@ -51,6 +52,7 @@ def refresh_spotify_token(session_id, token = None):
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET
     }).json()
+    print("refresh_spotify_token >> response ::", response)
  
     access_token = response.get("access_token")
     token_type = response.get("token_type")

@@ -88,9 +88,9 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 # CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
 
-# CSRF_COOKIE_NAME = 'X-CSRFTOKEN'
+CSRF_COOKIE_NAME = 'X-CSRFTOKEN'
 
-# CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_HTTPONLY = True
 
 ROOT_URLCONF = 'music_controller.urls'
@@ -159,11 +159,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-REACT_BUILD_DIR = BASE_DIR.joinpath('frontend', 'build', 'static')
+# REACT_BUILD_DIR = BASE_DIR.joinpath('frontend', 'build', 'static')
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    REACT_BUILD_DIR
+    # REACT_BUILD_DIR
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

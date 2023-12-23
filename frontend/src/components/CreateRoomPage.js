@@ -40,7 +40,7 @@ export default function CreateRoomPage(props) {
             guest_can_pause: guestCanPause,
             vote_to_skip: voteToSkip
         };
-        session.post("create-room", body)
+        session.post("api/create-room", body)
             .then(response => response.data)
             .then(data => navigate("/room/" + data.code))
     }
@@ -51,7 +51,7 @@ export default function CreateRoomPage(props) {
             vote_to_skip: voteToSkip,
             code: props.roomCode
         };
-        session.patch("update-room", body)
+        session.patch("api/update-room", body)
             .then(response => {
                 if (response.status === 200) {
                     setSuccessMsg("Room Updated successfully!")

@@ -8,6 +8,7 @@ export default function Room(props) {
     const [voteToSkip, setVoteToSkip] = useState(2);
     const [guestCanPause, setGuestCanPause] = useState(false);
     const [isHost, setIsHost] = useState(false);
+    const [spotifyAuthenticated, setSpotifyAuthenticated] = useState(false);
     const [showSettings, setShowSettings] = useState(false);
     const { roomCode } = useParams()
     const navigate = useNavigate()
@@ -18,14 +19,14 @@ export default function Room(props) {
         //     method: "POST",
         //     headers: { "Content-Type": "application/json" },
         // };
-        session.post("leave-room")
+        session.post("api/leave-room")
             .then(_response => {
                 navigate("/")
             })
     }
 
     // function getRoomDetails() {
-    //     session.get(`get-room?code=${roomCode}`)
+    //     session.get(`api/get-room?code=${roomCode}`)
     //         .then(response => {
     //             if (response.status!==200) {
     //                 props.leaveRoomCallBack();
@@ -42,7 +43,24 @@ export default function Room(props) {
     
     
     const getRoomDetails = useCallback(() => {
-        session.get(`get-room?code=${roomCode}`)
+        
+        function authenticateSpotify() {
+            session.get("spotify/is-authenticated")
+                .then(response => response.data)
+                .then(data => {
+                    setSpotifyAuthenticated(data.status)
+                    console.log("!data.status", !data.status)
+                    if (!data.status) {
+                        session.get("spotify/get-auth-url")
+                            .then(response => response.data)
+                            .then(data => {
+                                window.location.replace(data.url);
+                            })
+                    }
+                })
+        }
+
+        session.get(`api/get-room?code=${roomCode}`)
             .then(response => {
                 if (response.status !== 200) {
                     props.leaveRoomCallBack();
@@ -54,8 +72,13 @@ export default function Room(props) {
                 setVoteToSkip(data.vote_to_skip);
                 setGuestCanPause(data.guest_can_pause);
                 setIsHost(data.is_host);
+
+                if (isHost) {
+                    authenticateSpotify()
+                }
             });
-    }, [roomCode, props, navigate, session, setVoteToSkip, setGuestCanPause, setIsHost]);
+    }, [roomCode, props, navigate, session, setVoteToSkip, setGuestCanPause, setIsHost, isHost]);
+
 
     useEffect(() => {
         getRoomDetails()
@@ -102,6 +125,7 @@ export default function Room(props) {
     if (showSettings) {
         return renderSettings(voteToSkip, guestCanPause, roomCode);
     }
+    console.log("spotifyAuthenticated ::::::", spotifyAuthenticated);
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">

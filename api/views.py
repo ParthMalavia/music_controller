@@ -12,7 +12,12 @@ from django.views import View
 
 def csrf_token_view(request):
     # Get the CSRF token from the request
+    X_CSRFToken = request.headers.get("X-CSRFToken")
     csrf_token = request.COOKIES.get('csrftoken')
+    print("request.headers.get('X-CSRFToken'):::", X_CSRFToken)
+    print("request.headers:::", request.headers)
+    print("request.COOKIES.get('csrftoken'):::", request.COOKIES.get('csrftoken'))
+    print("request.COOKIES:::", request.COOKIES)
     
     if csrf_token:
         return JsonResponse({'csrfToken': csrf_token})
@@ -103,28 +108,27 @@ class CreateRoomView(APIView):
 class UserInRoom(APIView):
     def get(self, request):
         print("USER IN ROOM")
-        print(request.session.session_key)
-        print(request.session.items())
-        print(self.request.session.items())
-        print(self.request.session.session_key)
         if not request.session.exists(request.session.session_key):
             request.session.create()
         data = {
             "code": request.session.get("room_code")
         }
+        print("Room Code >>", request.session.get("room_code"))
         return Response(data, status=status.HTTP_200_OK)
 
 class LeaveRoom(APIView):
     def post(self, request):
         print("LEAVE ROOM")
-        print(request.session.items())
-        print(self.request.session.items())
-        print(self.request.session.session_key)
+        print("request.session >>", request.session.items())
+        print("self.request.session >>", self.request.session.items())
         if "room_code" in request.session:
             request.session.pop("room_code")
             room = Room.objects.filter(host=request.session.session_key)
             if room:
                 room.delete()
+        print(" ------ AFTER DELETION -----")
+        print("request.session >>", request.session.items())
+        print("self.request.session >>", self.request.session.items())
         return Response({"message": "success"}, status=status.HTTP_200_OK)
 
 class UpdateRoom(APIView):
