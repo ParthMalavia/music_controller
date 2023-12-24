@@ -75,22 +75,26 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
-# ALLOWED_HOSTS=['localhost', '127.0.0.1']
+# ALLOWED_HOSTS=['localhost', '127.0.0.1', "192.168.29.17"]
 # CORS_ORIGIN_ALLOW_ALL = False
 # CORS_ORIGIN_WHITELIST = (
 #        'http://localhost:8000',
+#     "http://192.168.29.17:3000/",
+
 # )
+
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:8000',
     'http://localhost:3000',
     'http://127.0.0.1:8000',
     'http://127.0.0.1:3000',
+    "http://192.168.29.17:3000/",
 ]
 # CSRF_HEADER_NAME = 'HTTP_X_CSRFTOKEN'
 
-CSRF_COOKIE_NAME = 'X-CSRFTOKEN'
+# CSRF_COOKIE_NAME = 'X-CSRFTOKEN'
 
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_HTTPONLY = True
 
 ROOT_URLCONF = 'music_controller.urls'

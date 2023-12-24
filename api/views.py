@@ -12,10 +12,7 @@ from django.views import View
 
 def csrf_token_view(request):
     # Get the CSRF token from the request
-    X_CSRFToken = request.headers.get("X-CSRFToken")
     csrf_token = request.COOKIES.get('csrftoken')
-    print("request.headers.get('X-CSRFToken'):::", X_CSRFToken)
-    print("request.headers:::", request.headers)
     print("request.COOKIES.get('csrftoken'):::", request.COOKIES.get('csrftoken'))
     print("request.COOKIES:::", request.COOKIES)
     
@@ -70,7 +67,9 @@ class GetRoomView(APIView):
                 # request.session["room_code"] = code
                 data['is_host'] = request.session.session_key == room.host
                 return Response(data, status=status.HTTP_200_OK)
+            # self.request.session.pop("room_code")
             return Response({'error': "Invalid room code."}, status=status.HTTP_400_BAD_REQUEST)
+        # self.request.session.pop("room_code")
         return Response({'error': "Code Parameter not found in request."}, status=status.HTTP_400_BAD_REQUEST)
 
 class CreateRoomView(APIView):
