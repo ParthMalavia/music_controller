@@ -5,6 +5,17 @@ import CreateRoomPage from "./CreateRoomPage";
 import { useSession } from "./SessionContext";
 import MusicPlayer from "./MusicPlayer";
 
+// const defaultSong = {
+//     "title": "",
+//     "artist": "",
+//     "duration": 0,
+//     "progress": 0,
+//     "image_url": "",
+//     "id": "",
+//     "is_playing": false,
+//     "votes": 0,
+// }
+
 export default function Room(props) {
     const [voteToSkip, setVoteToSkip] = useState(2);
     const [guestCanPause, setGuestCanPause] = useState(false);
@@ -60,25 +71,7 @@ export default function Room(props) {
             });
     }, [roomCode, props, navigate, session, setVoteToSkip, setGuestCanPause, setIsHost, isHost]);
     
-    // const getCurrentSong = useCallback(() => {
-    //     session.get("spotify/get-current-song")
-    //         .then(response => {
-    //             if (response.status !== 200)
-    //                 return {};
-    //             return response.data;
-    //         })
-    //         .then(data => {
-    //             console.log(data)
-    //             setSong(data)
-    //         })
-    // }, [session])
-
-    // useEffect(() => {
-    //     getCurrentSong()
-        
-    // }, [getCurrentSong])
-
-    const getCurrentSong = () => {
+    const getCurrentSong = useCallback(() => {
         session.get("spotify/get-current-song")
             .then(response => {
                 if (response.status !== 200)
@@ -89,18 +82,41 @@ export default function Room(props) {
                 console.log(data)
                 setSong(data)
             })
-    }
+    }, [session])
 
-    const interval = setInterval(() => {
-        getCurrentSong();
-    }, 1000);
+    useEffect(() => {
+        getCurrentSong()
+        
+    }, [getCurrentSong])
+
+    // const getCurrentSong = () => {
+    //     try {
+    //         session.get("spotify/get-current-song")
+    //             .then(response => {
+    //                 if (response.status !== 200)
+    //                     return {};
+    //                 return response.data;
+    //             })
+    //             .then(data => {
+    //                 console.log(data)
+    //                 setSong(data)
+    //             })
+    //     } catch (err) {
+    //         console.log("Get Current Song:", err);
+    //     }
+    // }
+
+    // const interval = setInterval(() => {
+    //     getCurrentSong();
+    // }, 1000);
 
     useEffect(() => {
         getRoomDetails()
         
-        return () => {
-            clearInterval(interval);
-        }
+        // return () => {
+        //     clearInterval(interval);
+        //     console.log("Cleared Interval");
+        // }
     }, [getRoomDetails])
 
     // NOTE: Testing Behaviour

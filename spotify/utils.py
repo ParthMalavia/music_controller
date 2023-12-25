@@ -36,10 +36,11 @@ def update_or_create_token(session_id, access_token, token_type, expires_in, ref
 
 def is_spotify_authenticated(session_id):
     token = get_user_token(session_id)   
-    # print("is_spotify_authenticated >> token ::", token.access_token) 
+    print("is_spotify_authenticated >> token ::") 
     # print(token.expires_at) 
     if token:
         expires_at = token.expires_at
+        print(expires_at, timezone.now())
         if expires_at <= timezone.now():
             refresh_spotify_token(session_id, token)
         return True
@@ -83,7 +84,17 @@ def execute_spotify_api(endpoint, session_id, post_=False, put_=False):
         method = "PUT"
     try:
         response = requests.request(method, BASE_URL+endpoint, headers=headers)
-        print(response)
+        if response.status_code == 204:
+            return {"error": "No Content"}
         return response.json()
     except:
         return {"error": "error with request"}
+
+def pause_song(session_id):
+    return execute_spotify_api("/me/player/pause", session_id, put_=True)
+
+def play_song(session_id):
+    return execute_spotify_api("/me/player/play", session_id, put_=True)
+
+def skip_song(session_id):
+    return execute_spotify_api("/me/player/next", session_id, post_=True)
