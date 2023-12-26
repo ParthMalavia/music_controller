@@ -13,8 +13,6 @@ from django.views import View
 def csrf_token_view(request):
     # Get the CSRF token from the request
     csrf_token = request.COOKIES.get('csrftoken')
-    print("request.COOKIES.get('csrftoken'):::", request.COOKIES.get('csrftoken'))
-    print("request.COOKIES:::", request.COOKIES)
     
     if csrf_token:
         return JsonResponse({'csrfToken': csrf_token})
@@ -23,8 +21,6 @@ def csrf_token_view(request):
 
 class TestView(View):
     def get(self, request):
-        print(request.session.get('test_keys'))
-        print(request.session.session_key)
         test_keys = request.session.get('test_keys', [])
         test_keys.append(random.randint(1, 100))
         request.session['test_keys'] = test_keys
@@ -36,8 +32,6 @@ class JoinRoomView(APIView):
     
     def post(self, request, code=None):
         print("JOIN ROOM")
-        print(self.request.session.session_key)
-        print(self.request.session.items())
         if not request.session.exists(request.session.session_key):
             request.session.create()
         
@@ -55,10 +49,6 @@ class GetRoomView(APIView):
     lookup_url_kwargs = "code"
     def get(self, request, code=None):
         print("GET ROOM")
-        print(request.session.items())
-        print(self.request.session.items())
-        print(request.session.session_key)
-        print(self.request.session.session_key)
         code = request.GET.get(self.lookup_url_kwargs)
         if code:
             room = Room.objects.filter(code=code).first()
@@ -75,10 +65,6 @@ class GetRoomView(APIView):
 class CreateRoomView(APIView):
     def post(self, request):
         print("CREATE ROOM")
-        print(request.session.items())
-        print(self.request.session.items())
-        print(request.session.session_key)
-        print(self.request.session.session_key)
         if not request.session.exists(request.session.session_key):
             request.session.create()
         serializer = CreateRoomSerializer(data=request.data)
@@ -112,29 +98,21 @@ class UserInRoom(APIView):
         data = {
             "code": request.session.get("room_code")
         }
-        print("Room Code >>", request.session.get("room_code"))
         return Response(data, status=status.HTTP_200_OK)
 
 class LeaveRoom(APIView):
     def post(self, request):
         print("LEAVE ROOM")
-        print("request.session >>", request.session.items())
-        print("self.request.session >>", self.request.session.items())
         if "room_code" in request.session:
             request.session.pop("room_code")
             room = Room.objects.filter(host=request.session.session_key)
             if room:
                 room.delete()
-        print(" ------ AFTER DELETION -----")
-        print("request.session >>", request.session.items())
-        print("self.request.session >>", self.request.session.items())
         return Response({"message": "success"}, status=status.HTTP_200_OK)
 
 class UpdateRoom(APIView):
     def patch(self, request):
         print("UPDATE ROOM")
-        print(request.session.session_key)
-        print(self.request.session.session_key)
         if not request.session.exists(request.session.session_key):
             request.session.create()
 

@@ -41,7 +41,7 @@ export default function Room(props) {
                 .then(response => response.data)
                 .then(data => {
                     setSpotifyAuthenticated(data.status)
-                    console.log("!data.status", !data.status)
+
                     if (!data.status) {
                         session.get("spotify/get-auth-url")
                             .then(response => response.data)
@@ -79,7 +79,6 @@ export default function Room(props) {
                 return response.data;
             })
             .then(data => {
-                console.log(data)
                 setSong(data)
             })
     }, [session])
@@ -98,7 +97,6 @@ export default function Room(props) {
     //                 return response.data;
     //             })
     //             .then(data => {
-    //                 console.log(data)
     //                 setSong(data)
     //             })
     //     } catch (err) {
@@ -130,7 +128,6 @@ export default function Room(props) {
         }
     }, [])
     
-
     function renderSettings(voteToSkip, guestCanPause, roomCode) {
         return <Grid container spacing={1}>
             <Grid item xs={12} align="center">
@@ -171,28 +168,12 @@ export default function Room(props) {
     if (showSettings) {
         return renderSettings(voteToSkip, guestCanPause, roomCode);
     }
-    console.log("spotifyAuthenticated ::::::", spotifyAuthenticated);
 
     return (
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">
                 <Typography variant="h4" component="h4">
                     Code: {roomCode}
-                </Typography>
-            </Grid>
-            {/* <Grid item xs={12} align="center">
-                <Typography variant="h6" component="h6">
-                    Votes: {voteToSkip}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} align="center">
-                <Typography variant="h6" component="h6">
-                    Guest can Pause: {guestCanPause.toString()}
-                </Typography>
-            </Grid> */}
-            <Grid item xs={12} align="center">
-                <Typography variant="h6" component="h6">
-                    Host: {isHost.toString()}
                 </Typography>
             </Grid>
             <MusicPlayer {...song}/>
@@ -205,13 +186,3 @@ export default function Room(props) {
         </Grid>
     )
 }
-
-/* 
-<div>
-        <h3>{roomCode}</h3>
-        <p>Votes: {voteToSkip}</p>
-        <p>Guest can Pause: {guestCanPause.toString()}</p>
-        <p>Host: {isHost.toString()}</p>
-    </div>
-
-*/

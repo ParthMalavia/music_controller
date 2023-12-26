@@ -24,7 +24,6 @@ export default function HomePage(props) {
             try {
                 session.get("api/user-in-room")
                     .then(response => {
-                        console.log("Setting Room code :: ", response.data.code)
                         setRoomCode(response.data.code)
                     })
             } catch (err) {
@@ -35,16 +34,12 @@ export default function HomePage(props) {
         fetchRoomCode();
     }, [session, setRoomCode]);
 
-    console.log("!!roomCode", !!roomCode, roomCode)
     useEffect(() => {
         if (!!roomCode) {
-            console.log("Before Redirect")
             navigate(`room/${roomCode}`);
-            console.log("After Redirect")
         }
     }, [roomCode, navigate]);
 
-    console.log("Func called")
     return (
         <Grid container spacing={3}>
             <Grid item xs={12} align="center">

@@ -163,11 +163,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-# REACT_BUILD_DIR = BASE_DIR.joinpath('frontend', 'build', 'static')
+REACT_BUILD_DIR = BASE_DIR.joinpath('frontend', 'build', 'static')
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    # REACT_BUILD_DIR
+    REACT_BUILD_DIR
 ]
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field

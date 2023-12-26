@@ -4,7 +4,6 @@ import { PlayArrow as PlayArrowButton, Pause as PauseButton, SkipNext as SkipNex
 import { useSession } from "./SessionContext";
 
 export default function MusicPlayer(props) {
-    console.log("MUSOC PLAYER PROPS ::", props)
     const songProgress = (props.progress / props.duration) * 100
     const { session } = useSession()
 
@@ -29,7 +28,6 @@ export default function MusicPlayer(props) {
     function skipSong() {
         session.post("spotify/skip-song")
             .then(response => {
-                console.log(response)
                 if ("error" in response.data) {
                     alert(response.data.error.reason)
                 }

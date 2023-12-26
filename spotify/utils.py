@@ -36,11 +36,8 @@ def update_or_create_token(session_id, access_token, token_type, expires_in, ref
 
 def is_spotify_authenticated(session_id):
     token = get_user_token(session_id)   
-    print("is_spotify_authenticated >> token ::") 
-    # print(token.expires_at) 
     if token:
         expires_at = token.expires_at
-        print(expires_at, timezone.now())
         if expires_at <= timezone.now():
             refresh_spotify_token(session_id, token)
         return True
@@ -57,10 +54,8 @@ def refresh_spotify_token(session_id, token = None):
         "client_id": CLIENT_ID,
         "client_secret": CLIENT_SECRET
     }).json()
-    print("refresh_spotify_token >> response ::", response)
  
     access_token = response.get("access_token")
-    print("access_token >> ", access_token)
     token_type = response.get("token_type")
     expires_in = response.get("expires_in")
     scope = response.get("scope")
@@ -72,7 +67,6 @@ def refresh_spotify_token(session_id, token = None):
 
 def execute_spotify_api(endpoint, session_id, post_=False, put_=False):
     token = get_user_token(session_id).access_token
-    print("execute_spotify_api >> token :: ", token)
     headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer {}".format(token)

@@ -32,8 +32,6 @@ export default function RoomJoinPage() {
             })
             .catch(err => {
                 setError(err.response.data.error)
-
-                console.log("Error:", err)
             })
     }
 

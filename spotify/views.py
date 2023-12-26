@@ -21,17 +21,14 @@ class AuthURL(APIView):
                 "scope": scopes,
                 "redirect_uri": REDIRECT_URL,
             }).prepare().url
-            print("PREPARED URL::: ", url)
 
             return Response({"url": url}, status=status.HTTP_200_OK)
         except Exception as e:
-            print("EROOOORR:::", e)
             return Response({"url": "-----url-----"}, status=status.HTTP_200_OK)
 
 
 def spotify_call_back(request):
     code = request.GET.get('code', None)
-    print("spotify_call_back >> code ::", code)
 
     response = requests.post(
         "https://accounts.spotify.com/api/token", 
@@ -44,7 +41,6 @@ def spotify_call_back(request):
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         auth=(CLIENT_ID, CLIENT_SECRET)).json()
-    print("spotify_call_back >> response ::", response)
 
     access_token = response.get("access_token")
     token_type = response.get("token_type")
@@ -60,7 +56,6 @@ def spotify_call_back(request):
         request.session.session_key,
         access_token, token_type, expires_in, refresh_token, scope
     )
-    print("request.headers >>> ", request.headers)
 
     return redirect("http://127.0.0.1:3000/")
 
@@ -72,15 +67,12 @@ class IsAuthenticated(APIView):
 
 class CurrentSong(APIView):
     def get(self, request, format=None):
-        print(">>>>>")
         room_code = self.request.session.get("room_code")
         room = Room.objects.filter(code=room_code).first()
-        print(room_code, room)
         if not room:
             return Response({}, status=status.HTTP_404_NOT_FOUND)
         
         host = room.host
-        print(host)
         endpoint = "/me/player/currently-playing"
         response = execute_spotify_api(endpoint, host)
         if "error" in response:
@@ -108,20 +100,17 @@ class CurrentSong(APIView):
             "votes_required": room.vote_to_skip,
         }
 
-        print("CurrentSong > sonf id :::", song_id)
         self.update_room(room, song_id)
 
         return Response(song, status=status.HTTP_200_OK)
     
     def update_room(self, room: Room, song_id):
         current_song = room.current_song
-        print(room, room.current_song, song_id)
 
         if current_song != song_id:
             room.current_song = song_id
             room.save(update_fields=['current_song'])
             votes = Vote.objects.filter(room=room).delete()
-            print("DELETED VOTES", room.current_song, votes)
 
 class PauseSong(APIView):
     def put(self, request, format=None):
